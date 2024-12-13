@@ -140,8 +140,17 @@ long measureBubbleSort(String filename) throws IOException{
 	return endTime - startTime;	// duration in ms
 }
 
+//System.out.println( measureBubbleSort("sort10000.txt") );
 
-System.out.println( measureBubbleSort("sort10000.txt") );
+
+void test() throws IOException{
+	System.out.println(new File("output.txt").getAbsolutePath());
+	BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt"));
+	System.out.println(new File("output.txt").getAbsolutePath());
+	writer.write("hello world???");
+	writer.close();
+}
+test();
 
 
 /*
