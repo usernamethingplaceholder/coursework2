@@ -1,0 +1,166 @@
+System.out.println("hello world")
+
+// creating the dictionaries:
+
+Map<String, Integer> suitDict = new HashMap<>();
+suitDict.put("H", 1); // Hearts
+suitDict.put("D", 2); // Diamonds
+suitDict.put("C", 3); // Clubs
+suitDict.put("S", 4); // Spades
+
+Map<String, Integer> numDict = new HashMap<>();
+numDict.put("A", 1); // Ace
+numDict.put("2", 2);
+numDict.put("3", 3);
+numDict.put("4", 4);
+numDict.put("5", 5);
+numDict.put("6", 6);
+numDict.put("7", 7);
+numDict.put("8", 8);
+numDict.put("9", 9);
+numDict.put("10", 10);
+numDict.put("J", 11); // Jack
+numDict.put("Q", 12); // Queen
+numDict.put("K", 13); // King
+
+
+// card compare
+
+int cardCompare(String card1, String card2) {
+	// 1 if card1 > card2	LEFT LARGER
+	// -1 if card1 < card2	RIGHT LARGER
+	// 0 if card1 == card2	SAME
+	
+	if ( suitDict.get(card1.substring(1)) > suitDict.get(card2.substring(1)) ) {
+		return 1;
+	}
+	else if ( suitDict.get(card1.substring(1)) < suitDict.get(card2.substring(1)) ) {
+		return -1;
+	}
+	else {
+		if ( numDict.get(card1.substring(0,1)) > numDict.get(card2.substring(0,1)) ) {
+			return 1;
+		}
+		else if ( numDict.get(card1.substring(0,1)) < numDict.get(card2.substring(0,1)) ) {
+			return -1;
+		}
+		else {
+			return 0; 
+		}
+	}
+}
+
+
+// bubble sort 
+
+ArrayList<String> bubbleSort(ArrayList<String> array){
+	int n = array.size();
+	boolean swapped = false;
+	String temp = "";
+	
+	for (int i = 0; i < n; i++) {	// one for each loop
+		swapped = false;
+		for (int j = 0; j < n-(1+i); j++) {	// one for each item
+			if (cardCompare(array.get(j), array.get(j + 1)) > 0) {	// swaps if out of order
+				temp = array.get(j);
+				array.set(j, array.get(j+1));
+				array.set(j+1, temp);
+				swapped = true;
+			}
+		}
+		if (!swapped) break;
+	}
+	return array;
+}
+
+
+// merge sort
+
+ArrayList<String> mergeSort(ArrayList<String> array){
+	if (array.size() <= 1) {
+		return array;	// if size 1 then (sorted) then return as is
+	}
+	
+	// Split into 2 halves
+	int mid = array.size() / 2;	// don't need to round as it's an int
+	ArrayList<String> leftArray = new ArrayList<String>(array.subList(0, mid));
+	ArrayList<String> rightArray = new ArrayList<String>(array.subList(mid,array.size()));
+	
+	// split those halves in halves (recursively)
+	leftArray = mergeSort(leftArray);
+	rightArray = mergeSort(rightArray);
+	
+	return merge(leftArray, rightArray);	// recursively merge back up and sort
+}
+
+ArrayList<String> merge(ArrayList<String> leftArray, ArrayList<String> rightArray){
+	ArrayList<String> mergedArray = new ArrayList<String>();	
+
+	int leftIndex = 0;
+	int rightIndex = 0;
+	// we don't need mergedIndex because .add gets right index anyway
+	
+	while ( (leftIndex < leftArray.size()) && (rightIndex < rightArray.size()) ) {	
+		if ( cardCompare(leftArray.get(leftIndex), rightArray.get(rightIndex)) < 0) {	// if left smaller
+			mergedArray.add(leftArray.get(leftIndex)); 
+			leftIndex++;
+		}
+		else {	// right is smaller/ same
+			mergedArray.add(rightArray.get(rightIndex)); 
+			rightIndex++;
+		}
+	}
+	
+	while (leftIndex < leftArray.size())
+ {	// if only remaining in left
+		mergedArray.add(leftArray.get(leftIndex)); 
+		leftIndex++;
+	}
+		
+	while (rightIndex < rightArray.size()) {	// if only remaining in right
+		mergedArray.add(rightArray.get(rightIndex)); 
+		rightIndex++;
+	}	
+	
+	return mergedArray;
+}
+
+
+//	measure bubble sort
+
+long measureBubbleSort(String filename) throws IOException{
+	List<String> lines = Files.readAllLines(Paths.get(filename));
+    ArrayList<String> cards = new ArrayList<>(lines);
+	
+	long startTime = System.currentTimeMillis();
+	bubbleSort(cards);
+	long endTime = System.currentTimeMillis();
+	
+	System.out.println(endTime - startTime);
+	return endTime - startTime;	// duration in ms
+}
+
+
+System.out.println( measureBubbleSort("sort10000.txt") );
+
+
+/*
+var list = new ArrayList<String>(List.of("4H", "3S", "7S", "8C", "2D", "3H"));
+bubbleSort(list);
+System.out.println(list);
+
+var list = new ArrayList<String>(List.of("4H", "3S", "7S", "8C", "2D", "3H"));
+mergeSort(list);
+System.out.println(list);
+
+
+long measureBubbleSort(String filename) throws IOException{
+// TODO
+}
+long measureMergeSort(String filename) throws IOException{
+// TODO
+}
+void sortComparison(String[] filenames) throws IOException{
+// TODO
+}
+*/
