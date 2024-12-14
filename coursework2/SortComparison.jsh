@@ -163,7 +163,7 @@ long measureBubbleSort(String filename) throws IOException{
 	catch (IOException e) {
 		try {
 			// if that fails it goes to the directory i provide
-			fileArray = new ArrayList<>(Files.readAllLines (Paths.get("D:/Reading/Year 1/Iterative programming/coursework2/coursework2_files/", filename) ));
+			fileArray = new ArrayList<>(Files.readAllLines (Paths.get("D:/Reading/Year 1/Iterative programming/coursework2/coursework2/coursework2_files/", filename) ));
 		} 
 		catch (IOException ex) {
 			// if both fail it throws an error
@@ -195,7 +195,7 @@ long measureMergeSort(String filename) throws IOException{
 	catch (IOException e) {
 		try {
 			// if that fails it goes to the directory i provide
-			fileArray = new ArrayList<>(Files.readAllLines (Paths.get("D:/Reading/Year 1/Iterative programming/coursework2/coursework2_files/", filename) ));
+			fileArray = new ArrayList<>(Files.readAllLines (Paths.get("D:/Reading/Year 1/Iterative programming/coursework2/coursework2/coursework2_files/", filename) ));
 		} 
 		catch (IOException ex) {
 			// if both fail it throws an error
@@ -249,14 +249,12 @@ void sortComparison(String[] filenames) throws IOException{
     } 
     catch (IOException e) {
         // then if that doesnt work it goes to the one ive provided
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("D:/Reading/Year 1/Iterative programming/coursework2/coursework2_files/sortComparison.csv"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("D:/Reading/Year 1/Iterative programming/coursework2/coursework2/coursework2_files/sortComparison.csv"))) {
             writer.write(result.toString());
         }
     }
 }
 
-
-sortComparison(new String[]{"sort10.txt", "sort100.txt", "sort10000.txt"});
 
 /*
 var list = new ArrayList<String>(List.of("4H", "3S", "7S", "8C", "2D", "3H"));
