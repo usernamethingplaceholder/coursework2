@@ -1,4 +1,4 @@
-System.out.println("hello world")
+// jshell -J-ea --execution local "$(FULL_CURRENT_PATH)"
 
 // creating the dictionaries:
 
@@ -152,9 +152,24 @@ ArrayList<String> merge(ArrayList<String> leftArray, ArrayList<String> rightArra
 
 long measureBubbleSort(String filename) throws IOException{
 	// get file and create and fill
-	//TODO CHANGE BELOW LINE TO WORK CORRECTLY WITH ROBUST FILES
-	List<String> fileData = Files.readAllLines(Paths.get("D:/Reading backup/Year 1/Iterative programming/coursework2/coursework2_files/" + filename));
-    ArrayList<String> fileArray = new ArrayList<>(fileData);
+	// it's coded with this much contingency so hopefully it works for both my pc and the virtual machine
+	
+	ArrayList<String> fileArray;
+	
+	try {
+		// first it tries reading from its default directory
+		fileArray = new ArrayList<>(Files.readAllLines(Paths.get(filename)));
+	} 
+	catch (IOException e) {
+		try {
+			// if that fails it goes to the directory i provide
+			fileArray = new ArrayList<>(Files.readAllLines (Paths.get("D:/Reading/Year 1/Iterative programming/coursework2/coursework2_files/", filename) ));
+		} 
+		catch (IOException ex) {
+			// if both fail it throws an error
+			throw new IOException("Failed to read file from both locations.", ex);
+		}
+	}
 	
 	// timings and call function
 	long startTime = System.currentTimeMillis();
@@ -169,9 +184,24 @@ long measureBubbleSort(String filename) throws IOException{
 
 long measureMergeSort(String filename) throws IOException{
 	// get file and create and fill
-	//TODO CHANGE BELOW LINE TO WORK CORRECTLY WITH ROBUST FILES
-	List<String> fileData = Files.readAllLines(Paths.get("D:/Reading backup/Year 1/Iterative programming/coursework2/coursework2_files/" + filename));
-    ArrayList<String> fileArray = new ArrayList<>(fileData);
+	// it's coded with this much contingency so hopefully it works for both my pc and the virtual machine
+	
+	ArrayList<String> fileArray;
+	
+	try {
+		// first it tries reading from its default directory
+		fileArray = new ArrayList<>(Files.readAllLines(Paths.get(filename)));
+	} 
+	catch (IOException e) {
+		try {
+			// if that fails it goes to the directory i provide
+			fileArray = new ArrayList<>(Files.readAllLines (Paths.get("D:/Reading/Year 1/Iterative programming/coursework2/coursework2_files/", filename) ));
+		} 
+		catch (IOException ex) {
+			// if both fail it throws an error
+			throw new IOException("Failed to read file from both locations.", ex);
+		}
+	}
 	
 	// timings and call function
 	long startTime = System.currentTimeMillis();
@@ -185,25 +215,44 @@ long measureMergeSort(String filename) throws IOException{
 // sort comparison
 
 void sortComparison(String[] filenames) throws IOException{
-	//TODO CAN DO BETTER
-	String result = ", 10, 100, 10000\n";	// initialises and adds the starting line
-	
-	// bubble sort
-	result += "bubbleSort";
-	for (String fileName : filenames) {
-		result += ", " + measureBubbleSort(fileName);
-	}
-	result += "\n";
-	
-	// merge sort
-	result += "mergeSort";
-	for (String fileName : filenames) {
-		result += ", " + measureMergeSort(fileName);
-			
-	}
-	result += "\n";
-	
-	System.out.println(result);
+    StringBuilder result = new StringBuilder();    // stringbuilders are more efficent here than strings
+    // builders are similar, but instead of += you do .append and similar
+    
+    // dynamic header 
+    for (String fileName : filenames) {
+        String size = fileName.replaceAll("\\D+", ""); // removes all non digit chars
+        result.append(", ").append(size);    // you can double stack appends (very cool)
+    }
+    result.append("\n");
+    
+    // bubble sort
+    result.append("bubbleSort");
+    for (String fileName : filenames) {
+        result.append(", ").append(measureBubbleSort(fileName));
+    }
+    result.append("\n");
+    
+    // merge sort
+    result.append("mergeSort");
+    for (String fileName : filenames) {
+        result.append(", ").append(measureMergeSort(fileName));        
+    }
+    result.append("\n");
+    
+    // save to file
+    // it's coded with this much contingency so hopefully it works for both my pc and the virtual machine
+    try {    
+        // first off tries with writing to own directory 
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("sortComparison.csv"))) {
+            writer.write(result.toString());
+        }
+    } 
+    catch (IOException e) {
+        // then if that doesnt work it goes to the one ive provided
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("D:/Reading/Year 1/Iterative programming/coursework2/coursework2_files/sortComparison.csv"))) {
+            writer.write(result.toString());
+        }
+    }
 }
 
 
@@ -222,7 +271,5 @@ System.out.println( measureBubbleSort("sort10000.txt") );
 
 System.out.println( measureMergeSort("sort10000.txt") );
 
-void sortComparison(String[] filenames) throws IOException{
-// TODO
-}
+sortComparison(new String[]{"sort10.txt", "sort100.txt", "sort10000.txt"});
 */
